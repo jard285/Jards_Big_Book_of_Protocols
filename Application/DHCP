@@ -118,15 +118,3 @@ Protocol Stack: UDP/IP
         1: broacast flag
         the leftmost bit should be set to one if the Client is unable to receive
             broadcast messages until an IP address is allocated
-
-
-
-
-
-
-
-
-
-
-
-
