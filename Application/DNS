@@ -1,0 +1,139 @@
+DNS: Domain Name System
+
+Port: 53 (usually)
+Protocol Stack: UDP/IP
+Clients in DNS are called resolvers
+
+Message Types:
+    non-recursive:
+        Either a authoritative response/partial response without querying other DNS servers
+        If Domain name is cached by server, it will be sent as well
+
+    recursive:
+        query one server which will query on behalf of the resolver
+        will make non-recursive requests to subsequent DNS servers and return one large response
+
+    iterative:
+        server responds with authoritative answers and IP addresses of additional servers
+        resolver queries additional servers for complete address list
+
+
+Types of Responses:
+    Autoritative Response:
+        answers queries with data from configured source
+
+
+DNS Zone of Authority:
+    Each zone has a master and a slave
+        Master:
+            Stores original copy of Zone records
+        Slave:
+            Identical copy of Master record
+
+    Zones have multiple resource records
+    Each zone must have a set of authoritative name servers
+    DNS servers/resolvers cache queries to reduced traffic
+
+
+DNS Resource Records:
+    Value   ID  Description
+    A       1   32 bit IPv4
+    AAAA    28  128 bit IPv6
+    CNAME   5   alias of name
+    MX      15  Mail exchange
+    NS      2   Delegates DNS zone to use authoritative servers
+
+Resource Record Field:
+    Name    Name of Node    variable 
+    Type    See above       2B
+    Class   class code      2B
+    TTL     Seconds alive   4B
+    RDlen   len of Rdata    2b
+    RData   more rrdata     variable
+
+
+DNS Header:
+                              1  1  1  1  1  1
+0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                      ID                       |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                    QDCOUNT                    |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                    ANCOUNT                    |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                    NSCOUNT                    |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                    ARCOUNT                    |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+    ID: 16 bit id assigned by program.  Id is copied by reply and can be used by requester
+    QR: one bit field specifying if it is a query or request
+    OPCODE: four bit field that specifies the kind of query
+    AA: Authoritative Answer
+    TC: specifies that the message was truncated
+    RD: recursion desired, requests querying responses
+    RA: recursion available, server can use recursion
+    Z: zero bits
+    RCODE: response code
+        0: no error condition
+        1: format error - name server was unable to interpret query
+        2: server error - name server was unable to process this query due to internal error
+        3: name error - meaningful for responses from authoritive name server.  Domain name referenced in query does not exits
+        4: not implemented - name server does not support type of query
+        5: refused - name server refuses to perform operation
+    QDCOUNT: unsinged 16 bit integer, number of entries in question section
+    ANCOUNT: unsigned 16 bit integer, number of resource records in answer section
+    NSCOUNT: unsigned 16 bit int specifying number of name server resource records in authority records section
+    ARCOUNT: unsigned 16 bit int specifying number of resource records in additional records section
+
+
+DNS Question:
+                              1  1  1  1  1  1
+0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                                               |
+|                     QNAME                     |
+|                                               |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                     QTYPE                     |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                     QCLASS                    |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+    QNAME: domain name represented as sequence of lables.  Each label consists of a length octect followed by that number of octets.  Domain name terminates with the zero length octect for null lable
+    QTYPE: two octed code which specifies tyoe of query
+    QCLASS: two octect code specifies the class of query
+
+
+DNS Response:
+                              1  1  1  1  1  1
+0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                                               |
+|                                               |
+|                      NAME                     |
+|                                               |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                      TYPE                     |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                     CLASS                     |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                      TTL                      |
+|                                               |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|                   RDLENGTH                    |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
+|                     RDATA                     |
+|                                               |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+    NAME: domain name that was queried in same format as QNAME in questions
+    TYPE: two octets containing one of the type codes.  Field specifies the meaning of the data in the RDATA field
+    CLASS: two octets which specify the class of data in the RDATA field
+    TTL: number of seconds results can be cached for
+    RDLENGTH: length of RDATA field
+    RDATA: Data of response.  Format based on TYPE field
+
