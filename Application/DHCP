@@ -1,0 +1,74 @@
+DHCP: Dynamic Host Control Protocol
+
+Port: 68,76 (usually)
+Protocol Stack: UDP/IP
+
+	C                  		S
+	|-------Discovery------>|
+	|						|
+	|						|
+	|<---------Offer--------|
+	|						|
+	|						|
+	|<-------Request--------|
+	|						|
+	|						|
+	|----------Ack--------->|
+
+	Discovery:
+		src: 0.0.0.0  dst: 255.255.255.255
+		src port: 68  dst port: 67
+
+	Offer:
+		src: (Server address)  dst: 255.255.255.255
+		src: 68  dst:67
+
+	Request:
+		src: 0.0.0.0 (or assigned address) dst: 255.255.255.255 (or Server Address)
+		src: 67  dst: 68
+
+	Ack
+		src: (Server address) dst: (assigned address)
+		src: 68  dst: 67
+
+
+	Discovery -> Broadcast
+	Offer -> Unicast/Broadcast
+	Request -> Unicast
+	Ack -> Unicastß
+
+
+	Header:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | 					Transaction Identification 			       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Seconds Elapsed        |            Flags             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |		                   Client IP 					       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       	   Your IP	                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    	  Gateway IP                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Client Hardware Addr (16 Bytes)  		   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |					  Server Host Name (64 Bytes)			   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |							Boot File (128 Bytes)			   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+
+
+
+
+
+
+
+
+
+
+
