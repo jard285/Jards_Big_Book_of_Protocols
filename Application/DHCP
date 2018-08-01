@@ -1,6 +1,6 @@
 DHCP: Dynamic Host Control Protocol
 
-Port: 68,76 (usually)
+Port: 68,67 (usually)
 Protocol Stack: UDP/IP
 
     C                       S
@@ -33,15 +33,28 @@ Protocol Stack: UDP/IP
 
 
     Discovery -> Broadcast
-    Offer -> Unicast/Broadcast
+    Offer -> Unicast/Broadcast (broadcast if broadcast flag used)
     Request -> Unicast
     Ack -> Unicast
+
+
+    Dynamic allocation:
+        Reserve range of IP addresses. Clients request on connection to network. Client leases IP address, Server can reclaim
+
+    Automatic allocation:
+        Similar to dynamic, except server tries to give Client same address on reconnection
+
+    Manual allocation:
+        Assigns IP address per Client based on pre-defined mapping to MAC address.  If none is found, may fall back to dynamic or
+            automatic or drop Client
 
 
     Header:
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     OPCode     | Hardware Type | Hardware Len  |     Hops     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                    Transaction Identification                 |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -60,6 +73,51 @@ Protocol Stack: UDP/IP
    |                       Boot File (128 Bytes)                   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+   OpCode:
+       1: Boot Request
+       2: Boot reply
+
+    Hardware Type:
+        1:   Ethernet.    
+        2:   Experimental Ethernet.   
+        3:   Amateur Radio AX.25.     
+        4:   Proteon ProNET Token Ring.   
+        5:   Chaos.   
+        6:   IEEE 802.    
+        7:   ARCNET.  
+        8:   Hyperchannel.    
+        9:   Lanstar.     
+        10:  Autonet Short Address.   
+        11:  LocalTalk.   
+        12:  LocalNet (IBM PCNet or SYTEK LocalNET).  
+        13:  Ultra link.  
+        14:  SMDS.    
+        15:  Frame Relay.     
+        16:  ATM, Asynchronous Transmission Mode.     
+        17:  HDLC.    
+        18:  Fibre Channel.
+        19:  ATM, Asynchronous Transmission Mode.
+        20:  Serial Line.     
+        21:  ATM, Asynchronous Transmission Mode.     
+        22:  MIL-STD-188-220.     
+        23:  Metricom.    
+        24:  IEEE 1394.1995
+        25:  MAPOS.   
+        26:  Twinaxial.   
+        27:  EUI-64.  
+        28:  HIPARP.  
+        29:  IP and ARP over ISO 7816-3.  
+        30:  ARPSec.  
+        31:  IPsec tunnel. 
+        32:  Infiniband.
+        33:  CAI, TIA-102 Project 25 Common Air Interface.    
+        34:  Wiegand Interface.   
+        35:  Pure IP.
+
+    Flags:
+        1: broacast flag
+        the leftmost bit should be set to one if the Client is unable to receive
+            broadcast messages until an IP address is allocated
 
 
 
