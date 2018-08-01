@@ -35,7 +35,7 @@ Protocol Stack: UDP/IP
     Discovery -> Broadcast
     Offer -> Unicast/Broadcast
     Request -> Unicast
-    Ack -> Unicastß
+    Ack -> Unicast
 
 
     Header:
@@ -57,7 +57,7 @@ Protocol Stack: UDP/IP
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                      Server Host Name (64 Bytes)              |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                            Boot File (128 Bytes)              |
+   |                       Boot File (128 Bytes)                   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
