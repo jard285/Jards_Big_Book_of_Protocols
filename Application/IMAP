@@ -1,0 +1,8 @@
+Internet Message Access Protocol (IMAP)
+
+Port: 143, 993 (IMAPS)
+Protocol stack: TCP/IP
+
+Used to retrieve emails from mail server, along with competetor POP3
+
+

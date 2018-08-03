@@ -1,0 +1,21 @@
+Simple Mail Transfer Protocol
+
+Port: 25 (between mail servers)/587 (mail clients)
+Protocol Stack: TCP/IP
+
+
+Mail Processing Flow:
+Mail User Agent (MUA) ----> Mail Server Agent (MSA) ----> Mail Tranfer Agent (MTA)
+MTA ----> DNS ----> Mail Exchange (MX) ----> Mail Delivery Agent (MDA) ----> 
+storage/other network
+
+Email submitted by MUA, sent to MSA using SMTP. MSA sends to MTA, Usually same instance
+	of code runnning on one machine with different options.  MTA sends a DNS request
+	to look up mail exchanger record for recipient domain and sends it to the mail
+	exchanger using SMTP.  MTA can forward directly to another MTA or can make hops
+	to relay (stores and forwards) or gateway (forward not using SMTP).  Once mail
+	makes final hop, goes to MDA.  MDA places it in correct mailbox format. Can
+	be one or many recipients.  Once MDA gets the message it can either send
+	directly to storage or forward to another network through SMTP or LMTP. Once delivered
+	to local mail server, mail is stored for batch retrieval by MUAs.  Mail is retrieved
+	my email clients using either IMAP or 
