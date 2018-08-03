@@ -1,0 +1,63 @@
+HyperText Transfer Protocol (HTTP)
+
+Port: 80, 8080, 443 (HTTPS)
+Protocol Stack: TCP/IP
+
+
+HTTP is stateless, does not retain information on client
+
+Message Types:
+	GET - 		requests specified resource
+	POST - 		request server accept entity as subordinate of URI
+	PUT - 		request entity be started under URI
+	DELETE - 	delete specified resource
+	TRACE - 	echoes received request so client can see changes
+	OPTIONS - 	returns HTTP methods server supports
+	PATCH - 	applies partial modifications
+
+
+Status Codes:
+	important: 		1xx
+	successful: 	2xx
+	redirect: 		3xx
+	client error: 	4xx
+	server error:	5xx
+
+
+HTTP Request Format:
+	request line - indicate command, specify resource using URI and indicate version
+	
+	general headers - mainly refer to message rather than content, used to control processing
+		or provide extra information
+	
+	request headers - convey to the server details about client request and give client control
+		over how request is handled. Can make request that will only complete if special
+		conditions are met. Can also tell formatting and encoding
+	
+	entity headers - describe the entity (messaage) if one exists
+	
+	empty line - used to space out header from content
+	
+	[message body] - optional message content, html or javascript goes here
+	
+	[message trailers] - optionally at the end of the message, contains information dynamically 
+		created by message such as integrity check, digital signature or post processing status
+
+
+HTTP Response Format:
+		
+		status line - status line, similar to request line sends HTTP version and status code,
+			status code made up of status code and reason phrase.  Reason phrase is descriptive
+			string to inform used of what error occurred
+
+		The rest of HTTP Response is the same as HTTP Request
+
+
+HTTPS:
+	HTTP over TLS/SSL
+
+	uses x.509 certification
+
+	certification is signed, and corroborated certificate authority
+
+	authenticate website by using trusted thrid party
