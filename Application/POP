@@ -1,0 +1,6 @@
+Post Office Protocol (POP3)
+
+port - 110, 995(POP3S)
+protocol stack - TCP/IP
+
+One-Way communication, may either leave on server or take off

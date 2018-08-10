@@ -4,5 +4,112 @@ Port: 143, 993 (IMAPS)
 Protocol stack: TCP/IP
 
 Used to retrieve emails from mail server, along with competetor POP3
+Two-Way communcation, only headers are downloaded, content stays on page
+Client command begins operation, each client commant is prefixed with a string, called a tag.  Commands are prefixed with '+' if they require a response
+server can either respond to a command, (has same tag as client message), or send message unilaterally (using * as a tag, and refgerred to as untagged)
+
+Command Types:
+    Any State:      The following commands are valid in any state
+        CAPABILITY: The CAPABILITY command requests a listing of capabilities that the
+        NOOP:       The NOOP command always succeeds.  It does nothing.
+        LOGOUT:     The LOGOUT command informs the server that the client is done with the connection
+
+    Not Authenticated: In the not authenticated state, the AUTHENTICATE or LOGIN command establishes authentication and enters the authenticated state
+        STARTTLS:       Indicates that the client will be using TLS to encrypt messages
+        AUTHENTICATE:   The AUTHENTICATE command indicates a SASL authentication mechanism to the server. 
+                        Server performs an authentication protocol exchange to authenticate and identify the client
+        LOGIN:          The LOGIN command identifies the client to the server and carries the plaintext password authenticating this user.
+
+    Authenticated: In the authenticated state, commands that manipulate mailboxes as atomic entities are permitted
+        SELECT:         Selects a mailbox so that messages in the mailbox can be accessed
+        EXAMINE:        identical to SELECT and returns the same output; but, selected mailbox is read-only
+        CREATE:         The CREATE command creates a mailbox with the given name
+        DELETE:         permanently removes the mailbox with the given name
+        RENAME:         Changes the name of a mailbox
+        SUBSCRIBE:      adds the specified mailbox name to the server's set of "active" or "subscribed" mailboxes returned by LSUB command
+        UNSUBSCRIBE:    removes mailbox from server's active or subsribed mailboxes
+        LIST:           returns a subset of names from the complete set of all names available to the client
+        LSUB:           returns a subset of names from the set of names that the user has declared as being "active" or "subscribed"
+        STATUS:         Requests the status of the indicated mailbox
+                            fields: messages, recent, uidnext, uidvalidity, unseen
+        APPEND:         command appends the literal argument as a new message to the end of the specified destination mailbox
+
+    Selected: In the selected state, commands that manipulate messages in a mailbox are permitted
+
+        CHECK:      requests a checkpoint of the currently selected
+                    mailbox.  A checkpoint refers to any implementation-dependent housekeeping associated with the mailbox 
+                    (e.g., resolving the server's in-memory state of the mailbox with the state on its disk)
+        CLOSE:      permanently removes all messages that have the \Deleted flag set from the 
+                    currently selected mailbox, and returns to the authenticated state from the selected state
+        EXPUNGE:    permanently removes all messages that have the \Deleted flag set from the currently selected mailbox
+        SEARCH:     searches the mailbox for messages that match the given searching criteria
+        FETCH:      retrieves data associated with a message in the mailbox
+        STORE:      alters data associated with a message in the mailbox.  Normally, STORE will return the updated value of the 
+                    data with an untagged FETCH response
+        COPY:       copies the specified message(s) to the end of the specified destination mailbox.  The flags and internal date of the
+                    message(s) SHOULD be preserved, and the Recent flag SHOULD be set, in the copy
+        UID:        In the first form, it takes as its arguments a COPY, FETCH, or STORE command with arguments appropriate for the associated command
+                    the UID command takes a SEARCH command with SEARCH command argument
+Flags:
+    \Seen
+       Message has been read
+
+    \Answered
+       Message has been answered
+
+    \Flagged
+       Message is "flagged" for urgent/special attention
+
+    \Deleted
+       Message is "deleted" for removal by later EXPUNGE
+
+    \Draft
+       Message has not completed composition (marked as a draft).
+
+    \Recent
+       Message is "recently" arrived in this mailbox.  This session
+       is the first session to have been notified about this.
 
 
+Connection Handshake:
+       +----------------------+
+       |connection established|
+       +----------------------+
+                  ||
+                  \/
++--------------------------------------+
+|          server greeting             |
++--------------------------------------+
+          || (1)       || (2)        || (3)
+          \/           ||            ||
++-----------------+    ||            ||
+|Not Authenticated|    ||            ||
++-----------------+    ||            ||
+ || (7)   || (4)       ||            ||
+ ||       \/           \/            ||
+ ||     +----------------+           ||
+ ||     | Authenticated  |<=++       ||
+ ||     +----------------+  ||       ||
+ ||       || (7)   || (5)   || (6)   ||
+ ||       ||       \/       ||       ||
+ ||       ||    +--------+  ||       ||
+ ||       ||    |Selected|==++       ||
+ ||       ||    +--------+           ||
+ ||       ||       || (7)            ||
+ \/       \/       \/                \/
++--------------------------------------+
+|               Logout                 |
++--------------------------------------+
+                  ||
+                  \/
+    +-------------------------------+
+    |both sides close the connection|
+    +-------------------------------+
+
+(1) connection without pre-authentication (OK greeting)
+(2) pre-authenticated connection (PREAUTH greeting)
+(3) rejected connection (BYE greeting)
+(4) successful LOGIN or AUTHENTICATE command
+(5) successful SELECT or EXAMINE command
+(6) CLOSE command, or failed SELECT or EXAMINE command
+(7) LOGOUT command, server shutdown, or connection closed
