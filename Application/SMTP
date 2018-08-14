@@ -18,4 +18,16 @@ Email submitted by MUA, sent to MSA using SMTP. MSA sends to MTA, Usually same i
 	be one or many recipients.  Once MDA gets the message it can either send
 	directly to storage or forward to another network through SMTP or LMTP. Once delivered
 	to local mail server, mail is stored for batch retrieval by MUAs.  Mail is retrieved
-	my email clients using either IMAP or 
+	my email clients using either IMAP or POP3
+
+
+Basic Structure:
+                  +----------+                +----------+
+      +------+    |          |                |          |
+      | User |<-->|          |      SMTP      |          |
+      +------+    |  Client- |Commands/Replies| Server-  |
+      +------+    |   SMTP   |<-------------->|    SMTP  |    +------+
+      | File |<-->|          |    and Mail    |          |<-->| File |
+      |System|    |          |                |          |    |System|
+      +------+    +----------+                +----------+    +------+
+                   SMTP client                SMTP server
