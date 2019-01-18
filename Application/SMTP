@@ -7,13 +7,6 @@ SMTP Terminology:
     Mail Object: name of the packet being sent.  Contains envelope and content
     Sender/Reciever: client sending and client recieving message
     Mail Agents/Message Stores: shorthand for MUA/MSA class
-    Host:
-    Domain Names:
-    Buffer and State Table:
-    Command and Replies:
-    Lines:
-    Message Content/Mail Data:
-
 
 Mail Processing Flow:
 Mail User Agent (MUA) ----> Mail Server Agent (MSA) ----> Mail Tranfer Agent (MTA)
@@ -31,8 +24,8 @@ Email submitted by MUA, sent to MSA using SMTP. MSA sends to MTA, Usually same i
 	to local mail server, mail is stored for batch retrieval by MUAs.  Mail is retrieved
 	my email clients using either IMAP or POP3
 
-
 Basic Structure:
+
                   +----------+                +----------+
       +------+    |          |                |          |
       | User |<-->|          |      SMTP      |          |
@@ -42,3 +35,5 @@ Basic Structure:
       |System|    |          |                |          |    |System|
       +------+    +----------+                +----------+    +------+
                    SMTP client                SMTP server
+
+

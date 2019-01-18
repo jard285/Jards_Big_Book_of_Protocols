@@ -70,7 +70,7 @@ DNS Header:
 +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
     ID: 16 bit id assigned by program.  Id is copied by reply and can be used by requester
-    QR: one bit field specifying if it is a query or request
+    QR: one bit field specifying if it is a query or response
     OPCODE: four bit field that specifies the kind of query
     AA: Authoritative Answer
     TC: specifies that the message was truncated
