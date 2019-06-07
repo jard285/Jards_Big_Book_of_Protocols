@@ -3,15 +3,13 @@ Simple Mail Transfer Protocol
 Port: 25 (between mail servers)/587 (mail clients)
 Protocol Stack: TCP/IP
 
-SMTP Terminology:
-    Mail Object: name of the packet being sent.  Contains envelope and content
-    Sender/Reciever: client sending and client recieving message
-    Mail Agents/Message Stores: shorthand for MUA/MSA class
+text based, connection orient protocol
+commands called SMTP verbs
 
 Mail Processing Flow:
 Mail User Agent (MUA) ----> Mail Server Agent (MSA) ----> Mail Tranfer Agent (MTA)
 MTA ----> DNS ----> Mail Exchange (MX) ----> Mail Delivery Agent (MDA) ----> 
-storage/other network
+storage/other network ----> Client
 
 Email submitted by MUA, sent to MSA using SMTP. MSA sends to MTA, Usually same instance
 	of code runnning on one machine with different options.  MTA sends a DNS request
@@ -24,7 +22,24 @@ Email submitted by MUA, sent to MSA using SMTP. MSA sends to MTA, Usually same i
 	to local mail server, mail is stored for batch retrieval by MUAs.  Mail is retrieved
 	my email clients using either IMAP or POP3
 
-Basic Structure:
+SMTP verbs:
+	MAIL FROM - establish return address
+	RCPT TO - establish recipient of message
+	HELO - client introduce itself to server
+	RSET - abort current mail transaction
+	VRFY - confirms address exists, sometimes ignored for security reasons
+	NOOP - self-explanitory
+	QUIT - closes connection
+	DATA - signal beginning of message text
+		consists of message header and message body
+		actually group of commands
+		server responds to DATA command itself and at end of data
+
+
+server responds with message codes
+	2xx positive
+	4xx transient negative (drop)
+	5xx permanent negative (reject)
 
                   +----------+                +----------+
       +------+    |          |                |          |
@@ -36,4 +51,59 @@ Basic Structure:
       +------+    +----------+                +----------+    +------+
                    SMTP client                SMTP server
 
+SMTP Example session:
+S: 220 smtp.example.com ESMTP Postfix
+C: HELO relay.example.com
+S: 250 smtp.example.com, I am glad to meet you
+C: MAIL FROM:<bob@example.com>
+S: 250 Ok
+C: RCPT TO:<alice@example.com>
+S: 250 Ok
+C: RCPT TO:<theboss@example.com>
+S: 250 Ok
+C: DATA
+S: 354 End data with <CR><LF>.<CR><LF>
+C: From: "Bob Example" <bob@example.com>
+C: To: Alice Example <alice@example.com>
+C: Cc: theboss@example.com
+C: Date: Tue, 15 January 2008 16:02:43 -0500
+C: Subject: Test message
+C: 
+C: Hello Alice.
+C: This is a test message with 5 header fields and 4 lines in the message body.
+C: Your friend,
+C: Bob
+C: .
+S: 250 Ok: queued as 12345
+C: QUIT
+S: 221 Bye
+{The server closes the connection}
 
+
+ESMTP
+Extended SMTP -
+Extension of SMTP
+adds new commands
+
+SMTP verbs:
+	EHLO - same as HELO but informs server that client preferrs ESMTP
+	AUTH - used to authenticate client to the server
+	STARTTLS - starts tls connection between client and server
+	SIZE - either informs client maximum message size or size of email client sent
+
+ESMTP example:
+   S: 220-smtp.example.com ESMTP Server
+   C: EHLO client.example.com
+   S: 250-smtp.example.com Hello client.example.com
+   S: 250-AUTH GSSAPI DIGEST-MD5
+   S: 250-ENHANCEDSTATUSCODES
+   S: 250 STARTTLS
+   C: STARTTLS
+   S: 220 Ready to start TLS
+     ... TLS negotiation proceeds, further commands
+         protected by TLS layer ...
+   C: EHLO client.example.com
+   S: 250-smtp.example.com Hello client.example.com
+   S: 250 AUTH GSSAPI DIGEST-MD5 PLAIN
+   C: AUTH PLAIN dGVzdAB0ZXN0ADEyMzQ=
+   S: 235 2.7.0 Authentication successful
